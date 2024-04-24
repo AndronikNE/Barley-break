@@ -17,7 +17,7 @@ int main()
     int const H = 4;
 
     int m[W][H]{};
-    int t = 0;
+    int t = 1;
     int n, i1, j1;
 
     for (int i = 0; i < H; i++)
@@ -33,8 +33,7 @@ int main()
     {
         for (int j = 0; j < W; j++)
         {
-            if (m[i][j] != 0)
-                printf("%10i", m[i][j]);
+            printf("%5i", m[i][j]);
         }
         cout << "\n\n";
     }
@@ -55,8 +54,7 @@ int main()
     {
         for (int j = 0; j < W; j++)
         {
-            if (m[i][j] != 0)
-                printf("%10i", m[i][j]);
+            printf("%5i", m[i][j]);
         }
         cout << "\n\n";
     }
