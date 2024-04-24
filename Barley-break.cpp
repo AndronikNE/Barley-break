@@ -6,20 +6,29 @@
 #include <ctime>
 using namespace std;
 
-int main()
+void initArray(int** m, int& H, int& W) //инициализация массива
 {
-    SetConsoleCP(1251);
-    SetConsoleOutputCP(1251);
-    srand(time(0));
+    m = new int*[H]; // выделяем память для H указателей на строки
+    
+    for (int i = 0; i < W; i++)
+    {
+        m[i] = new int[W]; //для каждой строки выделяем память под W элементов
+    }
+}
+
+void deleteArray(int** m, int& H, int& W) //освобождение памяти
+{
+    for (int i = 0; i < W; i++)
+    {
+        delete[] m[i]; //освобождаем память каждой строки
+    }
+    delete[] m; //освобождаем память, выделенную под указатели на строки
+}
 
 
-    int const W = 4;
-    int const H = 4;
-
-    int m[W][H]{};
+void fillArray(int** m, int& H, int& W) //функция заполнения массива целыми числами
+{
     int t = 0;
-    int n, i1, j1;
-
     for (int i = 0; i < H; i++)
     {
         for (int j = 0; j < W; j++)
@@ -28,16 +37,26 @@ int main()
             t++;
         }
     }
-    cout << "\n\n\n";
+}
+
+void showArray(int** m, int& H, int& W)
+{
     for (int i = 0; i < H; i++)
     {
         for (int j = 0; j < W; j++)
         {
             if (m[i][j] != 0)
-                printf("%10i", m[i][j]);
+                printf("%8i", m[i][j]);
         }
         cout << "\n\n";
     }
+}
+
+void mixingNumbers(int** m, int& H, int& W) // перемешивание чисел
+{
+    int t = 0;
+    int n, i1, j1;
+
     for (int i = 0; i < H; i++)
     {
         for (int j = 0; j < W; j++)
@@ -49,17 +68,31 @@ int main()
             m[i1][j1] = t;
         }
     }
+}
 
-    cout << "\n";
-    for (int i = 0; i < H; i++)
-    {
-        for (int j = 0; j < W; j++)
-        {
-            if (m[i][j] != 0)
-                printf("%10i", m[i][j]);
-        }
-        cout << "\n\n";
-    }
+int main()
+{
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    srand(time(0));
+
+    int W = 4;
+    int H = 4;
+
+    int** m = nullptr; //объявляем указатель на двумерный массив
+    initArray (m, H, W); //инициализация массива
+
+    fillArray (m, H, W); //заполнение массива случайными числами от 1 до 15
+    cout << "\n\n\n";
+    showArray (m, H, W); //вывод массива на экран
+    
+    mixingNumbers (m, H, W);   //перемешивание чисел в массиве
+    cout << "\n\n\n";
+    showArray (m, H, W); //вывод массива на экран
+
+    deleteArray(m, H, W); //освобождаем память 
+
+    return 0;
 }
 
 
