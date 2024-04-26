@@ -3,14 +3,16 @@
 
 #include <iostream>
 #include <Windows.h>
-#include <ctime>
+#include <ctime> 
+#include <iomanip> // для использования setw
+
 using namespace std;
 
-void initArray(int** m, int& H, int& W) //инициализация массива
+void initArray(int**& m, int& H, int& W) //инициализация массива
 {
     m = new int*[H]; // выделяем память для H указателей на строки
 
-    for (int i = 0; i < W; i++)
+    for (int i = 0; i < H; i++)
     {
         m[i] = new int[W]; //для каждой строки выделяем память под W элементов
     }
@@ -47,6 +49,7 @@ void showArray(int** m, int& H, int& W) // функция вывода на эк
         {
             if (m[i][j] != 0)
                 printf("%8i", m[i][j]);
+            else cout << setw(8) << " "; //не отображает "0" на экране
         }
         cout << "\n\n";
     }
