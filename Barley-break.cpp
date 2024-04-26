@@ -48,8 +48,9 @@ void showArray(int** m, int& H, int& W) // функция вывода на эк
         for (int j = 0; j < W; j++)
         {
             if (m[i][j] != 0)
-                printf("%8i", m[i][j]);
-            else cout << setw(8) << " "; //не отображает "0" на экране
+                cout << setw(8) << m[i][j];
+            else
+                cout << setw(8) << " "; //не отображает "0" на экране
         }
         cout << "\n\n";
     }
@@ -73,6 +74,24 @@ void mixingNumbers(int** m, int& H, int& W) // перемешивание чис
     }
 }
 
+void findZero(int** m, int& H, int& W, int& zeroX, int& zeroY) //поиск пустой ячейки
+{
+    for (int i = 0; i < H; i++)
+    {
+        for (int j = 0; j < W; j++)
+        {
+            if (m[i][j] == 0)
+            {
+                zeroX = i;
+                zeroY = j;
+            }
+        }
+    }
+}
+
+//void buttonUp(int** m, int& H, int& W); //перемещение пустой ячейки вверх
+
+
 int main()
 {
     SetConsoleCP(1251);
@@ -82,6 +101,11 @@ int main()
     //размерность массива
     int W = 4;
     int H = 4;
+
+    int zeroX = 0;
+    int zeroY = 0;
+
+    int Button; //кнопка управления
 
     int** m = nullptr; //объявляем указатель на двумерный массив
     initArray (m, H, W); //инициализируем массив
