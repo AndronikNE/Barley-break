@@ -89,8 +89,37 @@ void findZero(int** m, int& H, int& W, int& zeroX, int& zeroY) //поиск пу
     }
 }
 
-//void buttonUp(int** m, int& H, int& W); //перемещение пустой ячейки вверх
+void buttonUp(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
+{
+    if (zeroY > 0)
+    {
+        swap(m[zeroX][zeroY], m[zeroX][zeroY - 1]);
+    }
+}
 
+void buttonDown(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вниз
+{
+    if (zeroY > W)
+    {
+        swap(m[zeroX][zeroY], m[zeroX][zeroY + 1]);
+    }
+}
+
+void buttonLeft(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
+{
+    if (zeroX > 0)
+    {
+        swap(m[zeroX][zeroY], m[zeroX - 1][zeroY]);
+    }
+}
+
+void buttonRight(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
+{
+    if (zeroX < H)
+    {
+        swap(m[zeroX][zeroY], m[zeroX + 1][zeroY]);
+    }
+}
 
 int main()
 {
@@ -112,12 +141,14 @@ int main()
 
     fillArray (m, H, W); //заполняем массив целыми числами от 0 до 15
     cout << "\n\n\n";
-    showArray (m, H, W); //вывод массива на экран
+    //showArray (m, H, W); //вывод массива на экран
 
     mixingNumbers (m, H, W); // перемешиваем числа в массиве
 
     cout << "\n\n\n";
     showArray (m, H, W); //вывод массива на экран
+
+    
     
     deleteArray(m, H, W); //освобождаем память 
 
