@@ -44,7 +44,11 @@ void fillArray(int** m, int& H, int& W) //функция заполнения м
 
 void showArray(int** m, int& H, int& W) // функция вывода на экран
 {
-    cout << "\n\n\n";
+    HANDLE h;
+    h = GetStdHandle(STD_OUTPUT_HANDLE); //получаем окно, в котором нужно изменить цвет
+    SetConsoleTextAttribute(h, 14); // меняем цвет названия программы на желтый
+
+    cout << "\n\n\n";    
     for (int i = 0; i < H; i++)
     {
         for (int j = 0; j < W; j++)
@@ -54,9 +58,9 @@ void showArray(int** m, int& H, int& W) // функция вывода на эк
             else
                 cout << setw(8) << " "; //не отображает "0" на экране
         }
-        cout << "\n\n";
+        cout << "\n\n";       
     }
-
+    SetConsoleTextAttribute(h, 15);
     cout << "\n\nУправление (пустой клеткой) осуществляется стрелками вверх, вниз, вправо, влево.\nДля Выхода нажмите ESC.\n";
 }
 
@@ -139,6 +143,41 @@ void buttonRight(int** m, int& H, int& W, int& zeroX, int& zeroY) //переме
     else if (zeroY == W) Continue();
 }
 
+bool verification (int** m, int& H, int& W) //проверка массива на упорядоченность элементов по возрастанию
+{
+    int version = 0, version_1 = 0;
+    for (int i = 0; i < H; i++)
+    {
+        int n = 0;
+        for (int j = 0; j < W; j++)
+        {
+            if (m[i][j] != n)
+            {
+                version++;
+                break;
+            }
+            else
+                n++;
+        }
+    }
+    for (int i = 0; i < H; i++)
+    {
+        int n = 1;
+        for (int j = 0; j < W; j++)
+        {
+            if (m[i][j] != n)
+            {
+                version_1++;
+            }
+            else
+                n++;
+        }
+    }
+
+    if (version == 0 || (m[3][3]) == 0 && version_1 == 1)
+        return true;
+}
+
 int main()
 {
     SetConsoleCP(1251);
@@ -180,7 +219,13 @@ int main()
              buttonUp(m, H, W, zeroX, zeroY);
              system("cls");             
              showArray (m, H, W);
-             Continue();
+             if (verification(m, H, W) == true)
+             {
+                 cout << "\n\nПоздравляем! Вы выиграли!!!";
+                 return 0;
+             }
+             else
+                 Continue();
         }
 
         else if (Button == 80) { //перемещение пустой ячейки вниз
@@ -188,7 +233,13 @@ int main()
             buttonDown(m, H, W, zeroX, zeroY); 
             system("cls");
             showArray(m, H, W);
-            Continue();
+            if (verification(m, H, W) == true)
+            {
+                cout << "\n\nПоздравляем! Вы выиграли!!!";
+                return 0;
+            }
+            else
+                Continue();
         }
 
         else if (Button == 77) { //перемещение пустой ячейки вправо
@@ -196,7 +247,13 @@ int main()
             buttonRight(m, H, W, zeroX, zeroY);
             system("cls");
             showArray(m, H, W);
-            Continue();
+            if (verification(m, H, W) == true)
+            {
+                cout << "\n\nПоздравляем! Вы выиграли!!!";
+                return 0;
+            }
+            else
+                Continue();
         }
 
         else if (Button == 75) { //перемещение пустой ячейки влево
@@ -204,11 +261,15 @@ int main()
             buttonLeft(m, H, W, zeroX, zeroY);
             system("cls");
             showArray(m, H, W);
-            Continue();
+            if (verification(m, H, W) == true)
+            {
+                cout << "\n\nПоздравляем! Вы выиграли!!!";
+                return 0;
+            }
+            else
+                Continue();
         }
-    }
-
-    
+    }    
     
     deleteArray(m, H, W); //освобождаем память 
 
