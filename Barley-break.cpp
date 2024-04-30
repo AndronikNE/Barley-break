@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <ctime> 
 #include <iomanip> // для использования setw
+#include <conio.h> // для _getch()
 
 using namespace std;
 
@@ -14,13 +15,13 @@ void initArray(int**& m, int& H, int& W) //инициализация масси
 
     for (int i = 0; i < H; i++)
     {
-        m[i] = new int[W]; //для каждой строки выделяем память под W элементов
+        m[i] = new int[W]; //для каждой строки выделяем память под W элементов (столбцы)
     }
 }
 
 void deleteArray(int** m, int& H, int& W) //освобождение памяти
 {
-    for (int i = 0; i < W; i++)
+    for (int i = 0; i < H; i++)
     {
         delete[] m[i]; //освобождаем память каждой строки
     }
@@ -43,6 +44,7 @@ void fillArray(int** m, int& H, int& W) //функция заполнения м
 
 void showArray(int** m, int& H, int& W) // функция вывода на экран
 {
+    cout << "\n\n\n";
     for (int i = 0; i < H; i++)
     {
         for (int j = 0; j < W; j++)
@@ -54,6 +56,8 @@ void showArray(int** m, int& H, int& W) // функция вывода на эк
         }
         cout << "\n\n";
     }
+
+    cout << "\n\nУправление (пустой клеткой) осуществляется стрелками вверх, вниз, вправо, влево.\nДля Выхода нажмите ESC.\n";
 }
 
 void mixingNumbers(int** m, int& H, int& W) // перемешивание чисел
@@ -89,36 +93,50 @@ void findZero(int** m, int& H, int& W, int& zeroX, int& zeroY) //поиск пу
     }
 }
 
+void Continue(void)
+{
+    //cout << "\n\nУправление осуществляется стрелками вверх, вниз, вправо, влево.\nДля Выхода нажмите ESC.\n";
+    _getch();
+} // функция ожидания
+
 void buttonUp(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
-{
-    if (zeroY > 0)
-    {
-        swap(m[zeroX][zeroY], m[zeroX][zeroY - 1]);
-    }
-}
-
-void buttonDown(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вниз
-{
-    if (zeroY > W)
-    {
-        swap(m[zeroX][zeroY], m[zeroX][zeroY + 1]);
-    }
-}
-
-void buttonLeft(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
 {
     if (zeroX > 0)
     {
         swap(m[zeroX][zeroY], m[zeroX - 1][zeroY]);
+        zeroX--;
     }
+    else if (zeroX == 0) Continue();
 }
 
-void buttonRight(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
+void buttonDown(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вниз
 {
-    if (zeroX < H)
+    if (zeroX < H - 1)
     {
         swap(m[zeroX][zeroY], m[zeroX + 1][zeroY]);
+        zeroX++;
     }
+    else if (zeroX == H) Continue();
+}
+
+void buttonLeft(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки влево
+{
+    if (zeroY > 0)
+    {
+        swap(m[zeroX][zeroY], m[zeroX][zeroY - 1]);
+        zeroY--;
+    }
+    else if (zeroY == 0) Continue();
+}
+
+void buttonRight(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вправо
+{
+    if (zeroY < W - 1)
+    {
+        swap(m[zeroX][zeroY], m[zeroX][zeroY + 1]);
+        zeroY++;
+    }
+    else if (zeroY == W) Continue();
 }
 
 int main()
@@ -140,13 +158,55 @@ int main()
     initArray (m, H, W); //инициализируем массив
 
     fillArray (m, H, W); //заполняем массив целыми числами от 0 до 15
-    cout << "\n\n\n";
+    //cout << "\n\n\n";
     //showArray (m, H, W); //вывод массива на экран
 
     mixingNumbers (m, H, W); // перемешиваем числа в массиве
 
-    cout << "\n\n\n";
+    //cout << "\n\n\n";
     showArray (m, H, W); //вывод массива на экран
+
+    findZero(m, H, W, zeroX, zeroY); //поиск пустой ячейки
+
+    while (true)
+    {
+        Button = _getch(); //ожидание нажатия клавиши
+
+        if (Button == 27)
+            break;
+
+        else if (Button == 72) { //перемещение пустой ячейки вверх
+
+             buttonUp(m, H, W, zeroX, zeroY);
+             system("cls");             
+             showArray (m, H, W);
+             Continue();
+        }
+
+        else if (Button == 80) { //перемещение пустой ячейки вниз
+
+            buttonDown(m, H, W, zeroX, zeroY); 
+            system("cls");
+            showArray(m, H, W);
+            Continue();
+        }
+
+        else if (Button == 77) { //перемещение пустой ячейки вправо
+
+            buttonRight(m, H, W, zeroX, zeroY);
+            system("cls");
+            showArray(m, H, W);
+            Continue();
+        }
+
+        else if (Button == 75) { //перемещение пустой ячейки влево
+
+            buttonLeft(m, H, W, zeroX, zeroY);
+            system("cls");
+            showArray(m, H, W);
+            Continue();
+        }
+    }
 
     
     
