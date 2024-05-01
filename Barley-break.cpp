@@ -64,10 +64,6 @@ void fillArray(int** m, int H, int W) //функция заполнения ма
 
 void showArray(int** m, int H, int W, int numberMove) // функция вывода на экран
 {
-    /*/HANDLE h;
-    h = GetStdHandle(STD_OUTPUT_HANDLE); //получаем окно, в котором нужно изменить цвет
-    SetConsoleTextAttribute(h, 14); // меняем цвет названия программы на желтый
-    */
     cout << "\n\n\n";    
     for (int i = 0; i < H; i++)
     {
@@ -80,7 +76,6 @@ void showArray(int** m, int H, int W, int numberMove) // функция выво
         }
         cout << "\n\n";       
     }
-    //SetConsoleTextAttribute(h, 15);
     cout << "\n\nКоличество ходов: " << numberMove;
     cout << "\n\nУправление (пустой клеткой) осуществляется стрелками вверх, вниз, вправо, влево.\nДля Выхода нажмите ESC.\n";
 }
@@ -345,10 +340,7 @@ int main()
             else
                 Continue();
         }
-    }    
-    
-    //deleteArray(m, H, W); //освобождаем память 
-
+    }
     return 0;
 }
 
