@@ -9,7 +9,68 @@
 
 using namespace std;
 
-void initArray(int**& m, int& H, int& W) //инициализация массива
+const static void Configure_Console_Window(void) {
+
+    void* handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO structCursorInfo;
+    GetConsoleCursorInfo(handle, &structCursorInfo);
+    structCursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(handle, &structCursorInfo); // отключение каретки
+
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251); // установка кириллицы
+
+    const std::string Title = "title Barley-break"; // текст заголовка окна
+
+    system("color E"); // установка основного цвета текста
+    system("mode con cols=125 lines=30"); // установка разрешения консоли, отключения бокового скрола
+    system(Title.c_str()); // установка заголовка консоли
+    system("@echo off"); // переключение режима отображения команд на экране
+
+} // Функция настроек консольного окна
+
+void mainMenu(int& H, int& W)
+{
+    cout << "  ____    _    __  __ _____      _            _ ____ \n";
+    cout << " / ___|  / \\  |  \\/  | ____|    (_)_ __      / | ___| \n";
+    cout << "| |  _  / _ \\ | |\\/| |  _|      | | '_ \\     | |___ \\ \n";
+    cout << "| |_| |/ ___ \\| |  | | |___     | | | | |    | |___) | \n";
+    cout << " \\____/_/   \\_\\_|  |_|_____|    |_|_| |_|    |_|____/ \n";
+    cout << "\n\n\n";
+    cout << "        Для старта игры выберите размер поля:\n";
+    cout << "                    1. 3 х 3\n";
+    cout << "                    2. 4 х 4\n";
+    cout << "                    0. Выход\n";
+    int select;
+    while (true)
+    {
+        cin >> select;
+        if (select == 1)
+        {
+            H = 3;
+            W = 3;
+            break;
+        }
+        else if (select == 2)
+        {
+            H = 4;
+            W = 4;
+            break;
+        }
+        else if (select == 0)
+        {
+            return;
+        }
+    }
+
+    
+}
+void subMenu()
+{
+    
+}
+
+void initArray(int**& m, int H, int W) //инициализация массива
 {
     m = new int*[H]; // выделяем память для H указателей на строки
 
@@ -29,7 +90,7 @@ void deleteArray(int** m, int& H, int& W) //освобождение памят�
 }
 
 
-void fillArray(int** m, int& H, int& W) //функция заполнения массива
+void fillArray(int** m, int H, int W) //функция заполнения массива
 {
     int t = 0;
     for (int i = 0; i < H; i++)
@@ -42,12 +103,12 @@ void fillArray(int** m, int& H, int& W) //функция заполнения м
     }
 }
 
-void showArray(int** m, int& H, int& W) // функция вывода на экран
+void showArray(int** m, int H, int W) // функция вывода на экран
 {
-    HANDLE h;
+    /*/HANDLE h;
     h = GetStdHandle(STD_OUTPUT_HANDLE); //получаем окно, в котором нужно изменить цвет
     SetConsoleTextAttribute(h, 14); // меняем цвет названия программы на желтый
-
+    */
     cout << "\n\n\n";    
     for (int i = 0; i < H; i++)
     {
@@ -60,11 +121,11 @@ void showArray(int** m, int& H, int& W) // функция вывода на эк
         }
         cout << "\n\n";       
     }
-    SetConsoleTextAttribute(h, 15);
+    //SetConsoleTextAttribute(h, 15);
     cout << "\n\nУправление (пустой клеткой) осуществляется стрелками вверх, вниз, вправо, влево.\nДля Выхода нажмите ESC.\n";
 }
 
-void mixingNumbers(int** m, int& H, int& W) // перемешивание чисел
+void mixingNumbers(int** m, int H, int W) // перемешивание чисел
 {
     int t = 0;
     int i1, j1;
@@ -82,7 +143,7 @@ void mixingNumbers(int** m, int& H, int& W) // перемешивание чис
     }
 }
 
-void findZero(int** m, int& H, int& W, int& zeroX, int& zeroY) //поиск пустой ячейки
+void findZero(int** m, int H, int W, int& zeroX, int& zeroY) //поиск пустой ячейки
 {
     for (int i = 0; i < H; i++)
     {
@@ -103,7 +164,7 @@ void Continue(void)
     _getch();
 } // функция ожидания
 
-void buttonUp(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вверх
+void buttonUp(int** m, int H, int W, int& zeroX, int zeroY) //перемещение пустой ячейки вверх
 {
     if (zeroX > 0)
     {
@@ -113,7 +174,7 @@ void buttonUp(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещ�
     else if (zeroX == 0) Continue();
 }
 
-void buttonDown(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вниз
+void buttonDown(int** m, int H, int W, int& zeroX, int zeroY) //перемещение пустой ячейки вниз
 {
     if (zeroX < H - 1)
     {
@@ -123,7 +184,7 @@ void buttonDown(int** m, int& H, int& W, int& zeroX, int& zeroY) //переме�
     else if (zeroX == H) Continue();
 }
 
-void buttonLeft(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки влево
+void buttonLeft(int** m, int H, int W, int zeroX, int& zeroY) //перемещение пустой ячейки влево
 {
     if (zeroY > 0)
     {
@@ -133,7 +194,7 @@ void buttonLeft(int** m, int& H, int& W, int& zeroX, int& zeroY) //переме�
     else if (zeroY == 0) Continue();
 }
 
-void buttonRight(int** m, int& H, int& W, int& zeroX, int& zeroY) //перемещение пустой ячейки вправо
+void buttonRight(int** m, int H, int W, int zeroX, int& zeroY) //перемещение пустой ячейки вправо
 {
     if (zeroY < W - 1)
     {
@@ -143,7 +204,7 @@ void buttonRight(int** m, int& H, int& W, int& zeroX, int& zeroY) //переме
     else if (zeroY == W) Continue();
 }
 
-bool verification (int** m, int& H, int& W) //проверка массива на упорядоченность элементов по возрастанию
+bool verification (int** m, int H, int W) //проверка массива на упорядоченность элементов по возрастанию
 {
     int version = 0, version_1 = 0;
     for (int i = 0; i < H; i++)
@@ -180,16 +241,19 @@ bool verification (int** m, int& H, int& W) //проверка массива н
 
 int main()
 {
-    SetConsoleCP(1251);
-    SetConsoleOutputCP(1251);
+    Configure_Console_Window();
     srand(time(0));
 
     //размерность массива
-    int W = 4;
-    int H = 4;
-
+    int W;
+    int H;
+    
     int zeroX = 0;
     int zeroY = 0;
+
+    mainMenu(H, W);
+
+    system("cls");
 
     int Button; //кнопка управления
 
