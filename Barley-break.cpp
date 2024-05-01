@@ -29,47 +29,6 @@ const static void Configure_Console_Window(void) {
 
 } // Функция настроек консольного окна
 
-void mainMenu(int& H, int& W)
-{
-    cout << "  ____    _    __  __ _____      _            _ ____ \n";
-    cout << " / ___|  / \\  |  \\/  | ____|    (_)_ __      / | ___| \n";
-    cout << "| |  _  / _ \\ | |\\/| |  _|      | | '_ \\     | |___ \\ \n";
-    cout << "| |_| |/ ___ \\| |  | | |___     | | | | |    | |___) | \n";
-    cout << " \\____/_/   \\_\\_|  |_|_____|    |_|_| |_|    |_|____/ \n";
-    cout << "\n\n\n";
-    cout << "        Для старта игры выберите размер поля:\n";
-    cout << "                    1. 3 х 3\n";
-    cout << "                    2. 4 х 4\n";
-    cout << "                    0. Выход\n";
-    int select;
-    while (true)
-    {
-        cin >> select;
-        if (select == 1)
-        {
-            H = 3;
-            W = 3;
-            break;
-        }
-        else if (select == 2)
-        {
-            H = 4;
-            W = 4;
-            break;
-        }
-        else if (select == 0)
-        {
-            return;
-        }
-    }
-
-    
-}
-void subMenu()
-{
-    
-}
-
 void initArray(int**& m, int H, int W) //инициализация массива
 {
     m = new int*[H]; // выделяем память для H указателей на строки
@@ -103,7 +62,7 @@ void fillArray(int** m, int H, int W) //функция заполнения ма
     }
 }
 
-void showArray(int** m, int H, int W) // функция вывода на экран
+void showArray(int** m, int H, int W, int numberMove) // функция вывода на экран
 {
     /*/HANDLE h;
     h = GetStdHandle(STD_OUTPUT_HANDLE); //получаем окно, в котором нужно изменить цвет
@@ -122,6 +81,7 @@ void showArray(int** m, int H, int W) // функция вывода на экр
         cout << "\n\n";       
     }
     //SetConsoleTextAttribute(h, 15);
+    cout << "\n\nКоличество ходов: " << numberMove;
     cout << "\n\nУправление (пустой клеткой) осуществляется стрелками вверх, вниз, вправо, влево.\nДля Выхода нажмите ESC.\n";
 }
 
@@ -239,6 +199,51 @@ bool verification (int** m, int H, int W) //проверка массива на
         return true;
 }
 
+void mainMenu(int& H, int& W)
+{
+    cout << "  ____    _    __  __ _____      _            _ ____ \n";
+    cout << " / ___|  / \\  |  \\/  | ____|    (_)_ __      / | ___| \n";
+    cout << "| |  _  / _ \\ | |\\/| |  _|      | | '_ \\     | |___ \\ \n";
+    cout << "| |_| |/ ___ \\| |  | | |___     | | | | |    | |___) | \n";
+    cout << " \\____/_/   \\_\\_|  |_|_____|    |_|_| |_|    |_|____/ \n";
+    cout << "\n\n\n";
+    cout << "        Для старта игры выберите размер поля:\n";
+    cout << "                    1. 3 х 3\n";
+    cout << "                    2. 4 х 4\n";
+    cout << "                    0. Выход\n\n";
+    cout << "                    Ваш выбор: ";
+    int select;
+    while (true)
+    {
+        cin >> select;
+        if (select == 1)
+        {
+            H = 3;
+            W = 3;
+            break;
+        }
+        else if (select == 2)
+        {
+            H = 4;
+            W = 4;
+            break;
+        }
+        else if (select == 0)
+        {
+            exit(0); // завершение программы            
+        }
+    }
+}
+
+void messageWinner(int** m, int H, int W)
+{
+    cout << "\n\nПоздравляем! Вы выиграли!!!";
+    deleteArray(m, H, W); //освобождаем память
+    cout << "\nДля продолжения нажмите любую клавишу...";
+    _getch();
+    mainMenu(H, W);
+}
+
 int main()
 {
     Configure_Console_Window();
@@ -248,8 +253,11 @@ int main()
     int W;
     int H;
     
+    //координаты пустой ячейки
     int zeroX = 0;
     int zeroY = 0;
+
+    int numberMove = 0;
 
     mainMenu(H, W);
 
@@ -267,7 +275,7 @@ int main()
     mixingNumbers (m, H, W); // перемешиваем числа в массиве
 
     //cout << "\n\n\n";
-    showArray (m, H, W); //вывод массива на экран
+    showArray (m, H, W, numberMove); //вывод массива на экран
 
     findZero(m, H, W, zeroX, zeroY); //поиск пустой ячейки
 
@@ -276,17 +284,21 @@ int main()
         Button = _getch(); //ожидание нажатия клавиши
 
         if (Button == 27)
-            break;
+        {
+            deleteArray(m, H, W); //освобождаем память
+            system("cls");
+            mainMenu(H, W);
+        }
 
         else if (Button == 72) { //перемещение пустой ячейки вверх
 
              buttonUp(m, H, W, zeroX, zeroY);
+             numberMove++;
              system("cls");             
-             showArray (m, H, W);
+             showArray (m, H, W, numberMove);
              if (verification(m, H, W) == true)
              {
-                 cout << "\n\nПоздравляем! Вы выиграли!!!";
-                 return 0;
+                 messageWinner(m, H, W);
              }
              else
                  Continue();
@@ -294,13 +306,13 @@ int main()
 
         else if (Button == 80) { //перемещение пустой ячейки вниз
 
-            buttonDown(m, H, W, zeroX, zeroY); 
+            buttonDown(m, H, W, zeroX, zeroY);
+            numberMove++;
             system("cls");
-            showArray(m, H, W);
+            showArray(m, H, W, numberMove);
             if (verification(m, H, W) == true)
             {
-                cout << "\n\nПоздравляем! Вы выиграли!!!";
-                return 0;
+                messageWinner(m, H, W);
             }
             else
                 Continue();
@@ -309,12 +321,12 @@ int main()
         else if (Button == 77) { //перемещение пустой ячейки вправо
 
             buttonRight(m, H, W, zeroX, zeroY);
+            numberMove++;
             system("cls");
-            showArray(m, H, W);
+            showArray(m, H, W, numberMove);
             if (verification(m, H, W) == true)
             {
-                cout << "\n\nПоздравляем! Вы выиграли!!!";
-                return 0;
+                messageWinner(m, H, W);
             }
             else
                 Continue();
@@ -323,19 +335,19 @@ int main()
         else if (Button == 75) { //перемещение пустой ячейки влево
 
             buttonLeft(m, H, W, zeroX, zeroY);
+            numberMove++;
             system("cls");
-            showArray(m, H, W);
+            showArray(m, H, W, numberMove);
             if (verification(m, H, W) == true)
             {
-                cout << "\n\nПоздравляем! Вы выиграли!!!";
-                return 0;
+                messageWinner(m, H, W);
             }
             else
                 Continue();
         }
     }    
     
-    deleteArray(m, H, W); //освобождаем память 
+    //deleteArray(m, H, W); //освобождаем память 
 
     return 0;
 }
